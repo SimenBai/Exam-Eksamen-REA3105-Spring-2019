@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <title>Oppgave 1</title>
+
+    <style>
+        * {
+            background: #3f3f3f;
+            color: white;
+        }
+        img {
+            width: 30vw;
+            cursor: pointer;
+        }
+
+        #fjell2, #fjell3 {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<img src="assets/img/fjell1.jpg" onclick="byttBildeTekst('fjell1')"><br>
+<img src="assets/img/fjell2.jpg" onclick="byttBildeTekst('fjell2')">
+<img src="assets/img/fjell2.png" onclick="byttBildeTekst('fjell2')"><br>
+<img src="assets/img/fjell3.jpg" onclick="byttBildeTekst('fjell3')">
+<img src="assets/img/fjell3.png" onclick="byttBildeTekst('fjell3')">
+
+<div id="fjell1"><h1>Bilde 1</h1>
+    <p>Bilde 1 bør benytte seg av filformatet JPG fordi dette bilde ikke trenger gjennomsiktighet og JPG har mindre
+        filstørrelse enn PNG for det samme bilde</p>
+    <p>Bildet er et punktgrafikkbilde</p>
+</div>
+<div id="fjell2"><h1>Bilde 2</h1>
+    <p>Bilde 2 bør benytte seg av filformatet PNG for å støtte gjennomsiktighet. Til venstre ser du et som er JPG, det er mindre, men det er ikke gjennomsiktig. Til høyre ser du et som er gjennomsiktig</p>
+    <p>Bildet er et punktgrafikkbilde</p></div>
+<div id="fjell3"><h1>Bilde 3</h1>
+    <p>Bilde 3 bør benytte seg av filformatet PNG for å støtte gjennomsiktighet. Til venstre ser du et som er JPG, det er mindre, men det er ikke gjennomsiktig. Til høyre ser du et som er gjennomsiktig</p>
+    <p>Bildet er et punktgrafikkbilde</p></div>
+
+<h5>Antar at ved hovedtype av datagrafikk mener de om det er punktgrafikk eller vektorgrafikk. Ettersom dette er et begrep som ikke har blitt brukt i vårt klasserom</h5>
+
+<script>
+    let currentImg = document.getElementById("fjell1");
+
+    function byttBildeTekst(id) {
+        //Funksjonen setter den nåværende bildeteksten til å ikke ha noe display
+        currentImg.style.display = "none";
+        //Funksjonen setter det nye bildeteksten til å bli det nåværende
+        currentImg = document.getElementById(id);
+        //Funksjonen setter den nåværende(nye) bildeteksten til å ha display: block
+        currentImg.style.display = "block";
+    }
+</script>
+</body>
+</html>

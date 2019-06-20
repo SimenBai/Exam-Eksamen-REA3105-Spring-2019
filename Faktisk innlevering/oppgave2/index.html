@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <title>Oppgave 2A</title>
+
+</head>
+<body>
+<h1>Oppgave 2A</h1>
+<p>Skriv inn hvor mange piksler bred, og høyt bilde er for å regne ut det totale antallet piksler</p>
+<label>Bredde</label>
+<input id="bredde" type="number" value="1" min = "1" onchange="updatePixel()">
+<br>
+<label>Høyde</label>
+<input id="hoyde" type="number" value="1" min = "1" onchange="updatePixel()">
+
+<p>Piksler: <span id="pixel">0</span></p>
+<p>Megapiksler: <span id="mPixel">0</span></p>
+
+<script>
+    //Elementet der antall piksler står, definert utenfor funksjonsskopet for å slippe å definere det hele tiden.
+    let pixel = document.getElementById("pixel");
+    //Elementet der antall megapiksler står, definert utenfor funksjonsskopet for å slippe å definere det hele tiden.
+    let mPixel = document.getElementById("mPixel");
+
+    //Oppdaterer piklser for å få riktige verdier.
+    updatePixel();
+
+    //Funksjon for å oppdatere pikslene basert på input feltene
+    function updatePixel() {
+        //Henter bredde fra inputen for bredde
+        let width = Number(document.getElementById("bredde").value);
+        //Henter høyden fra inputen for høyde
+        let height = Number(document.getElementById("hoyde").value);
+
+        //Beregner antall piksler og megapiksler og oppdaterer elementene.
+        pixel.innerHTML = (width*height).toString();
+        mPixel.innerHTML = ((width*height)/1000000).toString();
+    }
+</script>
+</body>
+</html>

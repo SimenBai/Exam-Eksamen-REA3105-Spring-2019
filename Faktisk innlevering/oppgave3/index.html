@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <title>Oppgave 3</title>
+
+</head>
+<body>
+<h1>Oppgave 3</h1>
+
+<label>Første hytte</label>
+<select id="hytte1" onchange="oppdaterHytte(1)"></select><br>
+<label>Andre hytte</label>
+<select id="hytte2" onchange="oppdaterHytte(2)"></select><br>
+<label>Tredje hytte</label>
+<select id="hytte3" onchange="oppdaterHytte(3)"></select><br>
+
+<button onclick="planleggRute();">Regn ut avstanden</button>
+<p>Totalt antall kilometer: <span id="km"></span></p>
+<p id="rute"></p>
+
+<script>
+    //Definerer antall hytter
+    let antallHytter = 3;
+    //Definerer hyttene
+    let hytteData = {
+        "Gjendesheim": {
+            "Glitterheim": 22,
+            "Memurubu": 14
+        },
+        "Glitterheim": {
+            "Gjendesheim": 22,
+            "Memurubu": 18,
+            "Spiterstulen": 17
+        },
+        "Memurubu": {
+            "Gjendesheim": 14,
+            "Glitterheim": 18,
+            "Gjendebu": 10
+        },
+        "Gjendebu": {
+            "Memurubu": 10,
+            "Leirvassbu": 19,
+            "Spiterstulen": 24,
+            "Olavsbu": 16
+        },
+        "Leirvassbu": {
+            "Gjendebu": 19,
+            "Spiterstulen": 15,
+            "Olavsbu": 11
+        },
+        "Spiterstulen": {
+            "Glitterheim": 17,
+            "Gjendebu": 24,
+            "Leirvassbu": 15
+        },
+        "Olavsbu": {
+            "Gjendebu": 16,
+            "Leirvassbu": 11
+        }
+    };
+
+    //Funksjon for å hente alle stiene for et sted
+    function getPaths(sted) {
+        //Definerer et objekt
+        let stier = {};
+        //Går gjennom alle stiene for det stedet og legger det til i objektet med stien som key.
+        for (let sti in hytteData[sted]) {
+            stier[sti] = 0;
+        }
+        return stier;
+    }
+
+
+    //Funksjon for å initialisere hyttene i den første velgeren
+    function initialiserHytter() {
+        //Oppdaterer velgeren med hyttedataene.
+        document.getElementById("hytte1").innerHTML = lagVelger(hytteData);
+
+        //Legger til de andre hyttene
+        oppdaterHytte(1);
+    }
+
+
+    //Funksjon for å oppdatere stiene som trengs.
+    function oppdaterHytte(id){
+        if(id >= antallHytter){
+            //Det er ikke flere hytter å oppdatere, slutt den rekursive loopen
+            return;
+        }
+        else{
+            //Henter den valgte hytteVelgerElementet
+            let hytte = document.getElementById("hytte" + id);
+            //Finner hytten som er valgt
+            let valgtHytte = hytte.value;
+
+            //Henter stiene som går fra den valgte hytten som et array
+            let stier = getPaths(valgtHytte);
+            //Definerer den neste hytten. Vi vet det må finnes en fordi vi sjekker iden tidligere
+            let nesteHytte = document.getElementById("hytte" + (id+1));
+
+            //Legger til valgmulighetene
+            nesteHytte.innerHTML = lagVelger(stier);
+
+            //Begynner å oppdatere neste sti
+            oppdaterHytte(id + 1);
+
+            //Her fortsetter programmet når den er ferdig med stiene som har høyere id enn seg.
+        }
+    }
+
+    //Funksjon for å lage velger html string
+    function lagVelger (data){
+        //Definerer en string for å lagre html options i, for de valgene
+        let muligheter = "";
+
+        //Går gjennom alle dataene, og legger det til som en valgmuligheter
+        for (let element in data) {
+            muligheter += `<option value='${element}'>${element}</option>`;
+        }
+
+        return muligheter;
+    }
+
+    //Beregner avstanden fra hytte til hytte
+    //Tar imot id'en på hytten den skal regne fra
+    //Tar imot et boolean for om den skal regne hele veien fra id'en til slutt.
+    //km for å holde styr på avstanden når total blir utregnet
+    function beregnAvstand(id, total, km){
+        if(id >= antallHytter){
+            //Det er ikke flere hytter å oppdatere, slutt den rekursive loopen
+            if(km == undefined || km == null){
+                km = 0;
+            }
+            //Returnerer km, når dette blir gjort, vil denne bli returnert til stedet man kalte beregnAvstand.
+            return km;
+        }
+
+        //Henter navnet på hytten man drar fra og hytten man drar til
+        let fraHytte = document.getElementById("hytte"+id).value;
+        let tilHytte = document.getElementById("hytte"+(id + 1)).value;
+
+        //Distansen mellom de to hyttene
+        let distanse = hytteData[fraHytte][tilHytte];
+
+        //Hvis man skal regne totalen
+        if(total){
+            km += distanse;
+            //Returnerer den beregnede totale avstanden for den neste hytten. Den må returneres fordi det er en rekursiv funksjon
+            return beregnAvstand(id + 1, true, km);
+        }
+        else{
+            //Returnerer distansen som har blitt utregnet.
+            return distanse;
+        }
+    }
+
+    //Funksjon for å oppdatere ruten og avstandene
+    function planleggRute(){
+        //Beregner den totale avstanden
+        let totaltAntallKM = beregnAvstand(1, true, 0);
+        //Setter avstanden
+        document.getElementById("km").innerHTML = totaltAntallKM;
+        //Henter tekst for ruten, og legger til antall kilometer totalt
+        document.getElementById("rute").innerHTML = byggRute(1, "", true) + ". Turen er totalt " + totaltAntallKM + "km";
+    }
+
+    //Bygger rute-teksten
+    function byggRute(id, string, start){
+        //Sjekker om man er på siste hytte
+        if(id >= antallHytter){
+            return string;
+        }
+        //Hvis dette er starten, så må vi starte setningen annerledes
+        if(start){
+            string += "Du starter fra " + document.getElementById("hytte" + id).value;
+        }
+        //Legger til informasjonen om hytten man drar til, og hvor langt det er.
+        string += ", og drar så " + beregnAvstand(id) + "km til " + document.getElementById("hytte" + (id+1)).value;
+
+        //Legger til neste hytte.
+        return byggRute(id+1, string, false);
+    }
+
+    //Initialiserer verdiene.
+    initialiserHytter();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+For å sjekke applikasjonen for å se om den funker må enn sjekke om enn får de verdiene man forventer å få.
+
+Først må man sjekke at multipliseringen blir gjort riktig for pikslene. Deretter må man teste om megapikslene blir beregnet riktig.
+Jeg skal derfor prøve med et par enkle tall til å begynne med, for eksempel 10*10 piksler = 100 piksler,
+ for så og gå for tall som er mer realistisk i forhold til megapiksler, for eksempel 1000*1000 piksler og se om det er lik 1 megapiksel
